@@ -1,0 +1,32 @@
+## Build
+bin/
+obj/
+out/
+*.user
+*.suo
+*.cache
+.vs/
+.tmp/
+Personal/
+
+## Secrets / local overrides (never commit real tokens)
+appsettings.*.local.json
+secrets.json
+**/usersecrets/**
+tools/GenerateApiTokens/bin/
+tools/GenerateApiTokens/obj/
+
+## OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+## Test artifacts
+TestResults/
+*.trx
+coverage/
+
+## Uploaded temp files if any leak outside sandbox
+*.uploading

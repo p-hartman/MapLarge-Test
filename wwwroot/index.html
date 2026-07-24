@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <title>Secure File Browser PoC</title>
+    <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+    <main class="page">
+        <header class="page-header">
+            <h1>Secure File Browser</h1>
+            <p class="subtitle">
+                MapLarge Exercise
+            </p>
+        </header>
+
+        <section class="card" id="auth-card">
+            <h2>1. Authenticate</h2>
+            <p>
+                On <code>dotnet run</code> (Development), session tokens are auto generated into
+                the local .NET User Secrets key store and print the file path (not the
+                values). Open that <code>secrets.json</code>, copy a plaintext hex token,
+                paste it here, then sign in. When you stop the app (<code>Ctrl+C</code>), The
+                tokens clear.
+            </p>
+            <label for="token-input">API token</label>
+            <input id="token-input" type="password" autocomplete="off" spellcheck="false"
+                   placeholder="Paste hex token from User Secrets secrets.json" />
+            <div class="row">
+                <button type="button" id="btn-login">Sign in</button>
+                <button type="button" id="btn-logout" class="secondary" disabled>Sign out</button>
+            </div>
+            <p id="auth-status" class="status" role="status"></p>
+        </section>
+
+        <section class="card">
+            <h2>2. Open the file browser</h2>
+            <p>
+                Can share UI state without server-side HTML rendering
+            </p>
+            <button type="button" id="btn-open-browser" disabled>Open File Browser</button>
+        </section>
+
+        <section class="card muted">
+            <h2>Features to highlight</h2>
+            <ul>
+                <li>Require a valid Bearer token (authn) and role policy (authz) on every file API.</li>
+                <li>Canonicalize paths server-side and keep them under <code>SandboxHome</code>.</li>
+                <li>See <code>README.md</code>, threat model, and <code>docs/DEPENDENCIES.md</code>.</li>
+            </ul>
+        </section>
+    </main>
+
+    
+    <dialog id="browser-dialog" aria-labelledby="browser-title">
+        <form method="dialog" class="dialog-chrome">
+            <h2 id="browser-title">File Browser</h2>
+            <button type="submit" class="secondary" value="close" id="btn-close-dialog">Close</button>
+        </form>
+
+        <div class="browser-toolbar">
+            <div class="path-row">
+                <button type="button" id="btn-up" title="Go to parent folder">Up</button>
+                <button type="button" id="btn-home" title="Go to home">Home</button>
+                <input id="path-input" type="text" spellcheck="false" aria-label="Current path" />
+                <button type="button" id="btn-go">Go</button>
+            </div>
+            <div class="search-row">
+                <input id="search-input" type="search" placeholder="Search by name…" aria-label="Search" />
+                <button type="button" id="btn-search">Search</button>
+                <button type="button" id="btn-clear-search" class="secondary">Clear</button>
+            </div>
+            <div class="actions-row">
+                <label class="file-upload">
+                    Upload
+                    <input id="file-input" type="file" />
+                </label>
+                <button type="button" id="btn-download" class="secondary">Download</button>
+                <button type="button" id="btn-copy" class="secondary">Copy</button>
+                <button type="button" id="btn-move" class="secondary">Move</button>
+                <button type="button" id="btn-delete" class="danger">Delete</button>
+            </div>
+            <p id="stats" class="stats" aria-live="polite"></p>
+            <p id="browser-status" class="status" role="status"></p>
+        </div>
+
+        
+        <section class="data-panel" aria-labelledby="data-panel-title">
+            <div class="data-panel-heading">
+                <div>
+                    <h3 id="data-panel-title">Files and folders</h3>
+                    <p>Select an item to download, copy, move, or delete</p>
+                </div>
+            </div>
+            <div class="table-wrap" tabindex="0" aria-label="Scrollable files and folders">
+                <table id="entries-table">
+                    <thead>
+                        <tr>
+                            <th>Select</th>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                            <th>Modified (UTC)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="entries-body"></tbody>
+                </table>
+            </div>
+        </section>
+    </dialog>
+
+    <script type="module" src="/js/app.js"></script>
+</body>
+</html>
